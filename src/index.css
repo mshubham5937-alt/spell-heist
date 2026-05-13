@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@500&family=Geist:wght@400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-background: #131313;
+  --color-surface: #131313;
+  --color-surface-dim: #131313;
+  --color-surface-bright: #3a3939;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container: #201f1f;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-highest: #353534;
+  --color-on-surface: #e5e2e1;
+  --color-on-surface-variant: #e9bcba;
+  --color-primary: #ffb3b2;
+  --color-on-primary: #680012;
+  --color-primary-container: #ff525c;
+  --color-on-primary-container: #5b000f;
+  --color-secondary: #ffb3b5;
+  --color-on-secondary: #680018;
+  --color-secondary-container: #8e0f28;
+  --color-on-secondary-container: #ff989d;
+  --color-tertiary: #e9c400;
+  --color-on-tertiary: #3a3000;
+  --color-tertiary-container: #c9a900;
+  --color-on-tertiary-container: #4c3e00;
+
+  --color-success: #4ade80;
+  --color-on-success: #052e16;
+  --color-success-container: #166534;
+  --color-on-success-container: #dcfce7;
+
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --radius-sm: 0.125rem;
+  --radius-default: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  --spacing-base: 8px;
+  --spacing-gutter: 16px;
+  --spacing-margin-mobile: 20px;
+  --spacing-margin-desktop: 64px;
+  --spacing-panel-gap: 24px;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans antialiased;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-surface-container/60 backdrop-blur-xl border border-white/10;
+  }
+  
+  .neon-glow-red {
+    box-shadow: 0 0 15px rgba(255, 82, 92, 0.3);
+  }
+  
+  .text-glow-red {
+    text-shadow: 0 0 10px rgba(255, 179, 178, 0.6);
+  }
+  
+  .scanline {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .scanline::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.1) 50%
+    );
+    background-size: 100% 4px;
+    z-index: 10;
+    pointer-events: none;
+  }
+}
