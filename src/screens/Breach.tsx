@@ -186,12 +186,12 @@ export default function Breach({ onWin, onLose }: BreachProps) {
       </section>
 
       {/* Grid Canvas */}
-      <section className="flex-1 flex flex-col items-center justify-center gap-1.5 py-1 overflow-hidden">
-        <div className="font-mono text-[8px] sm:text-[10px] text-on-surface-variant bg-surface/80 px-2 py-0.5 border border-white/10 rounded-full">
+      <section className="flex-1 flex flex-col items-center justify-center gap-2 py-0.5 overflow-hidden">
+        <div className="font-mono text-[9px] sm:text-[11px] text-on-surface-variant bg-surface/80 px-3 py-0.5 border border-white/10 rounded-full mb-1">
           TARGET: {game.wordLength}-LETTER ENCRYPTION KEY
         </div>
         
-        <div className="flex flex-col gap-1 sm:gap-1.5">
+        <div className="flex flex-col gap-1.5 sm:gap-2">
           {/* Past Guesses */}
           {game.guesses.map((guess, i) => (
             <div key={i} className="flex gap-2">
@@ -224,10 +224,10 @@ export default function Breach({ onWin, onLose }: BreachProps) {
       </section>
 
       {/* Hacking Keyboard */}
-      <footer className="w-full max-w-lg mx-auto bg-surface-container-lowest/80 backdrop-blur-3xl p-1 sm:p-2 rounded-t-xl border-t border-primary/20 pb-1 sm:pb-4 shrink-0 z-10">
-        <div className="flex flex-col gap-1 sm:gap-2">
+      <footer className="w-full max-w-lg mx-auto bg-surface-container-lowest/80 backdrop-blur-3xl p-1.5 sm:p-2.5 rounded-t-xl border-t border-primary/20 pb-1 sm:pb-5 shrink-0 z-10">
+        <div className="flex flex-col gap-1.5 sm:gap-2.5">
           {keys.map((row, i) => (
-            <div key={i} className="flex justify-center gap-1 sm:gap-1.5">
+            <div key={i} className="flex justify-center gap-1 sm:gap-2">
               {row.map(key => {
                 const state = game.keyboardLetterStates[key];
                 const getKeyState = () => {
@@ -245,15 +245,15 @@ export default function Breach({ onWin, onLose }: BreachProps) {
                     key={key}
                     onClick={() => game.onKeyPress(key)}
                     className={`
-                      ${key === 'INJECT' ? 'w-14 sm:w-20' : key === 'BACKSPACE' ? 'w-8 sm:w-12' : 'flex-1'}
-                      flex items-center justify-center h-8 sm:h-10 rounded border
-                      font-mono text-[9px] sm:text-xs
+                      ${key === 'INJECT' ? 'w-16 sm:w-24' : key === 'BACKSPACE' ? 'w-9 sm:w-14' : 'flex-1'}
+                      flex items-center justify-center h-10 sm:h-12 rounded border
+                      font-mono text-[10px] sm:text-sm
                       hover:brightness-110
                       active:scale-95 transition-all
                       ${getKeyState()}
                     `}
                   >
-                    {key === 'BACKSPACE' ? <Delete size={16} /> : key}
+                    {key === 'BACKSPACE' ? <Delete size={18} /> : key}
                   </button>
                 );
               })}
@@ -286,7 +286,7 @@ function Tile({ letter, state, active }: TileProps) {
     <motion.div
       initial={state ? { rotateY: 90 } : false}
       animate={state ? { rotateY: 0 } : false}
-      className={`w-8 h-10 sm:w-10 sm:h-14 md:w-14 md:h-18 flex items-center justify-center rounded-t-sm border-b-2 font-display text-lg sm:text-xl md:text-3xl transition-all ${getStyles()}`}
+      className={`w-10 h-12 sm:w-12 sm:h-16 md:w-16 md:h-20 flex items-center justify-center rounded-t-sm border-b-2 font-display text-xl sm:text-2xl md:text-4xl transition-all ${getStyles()}`}
     >
       {letter}
     </motion.div>
