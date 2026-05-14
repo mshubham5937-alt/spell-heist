@@ -3,23 +3,50 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export const WORD_LISTS = {
-  technology: ['MODEM', 'CACHE', 'DEBUG', 'LOGIC', 'PROXY', 'ARRAY', 'SHIFT', 'INPUT', 'VOICE', 'IMAGE'],
-  crime: ['HEIST', 'CRACK', 'THIEF', 'CRIME', 'AGENT', 'GHOST', 'BREAK', 'ALERT', 'GUARD', 'STORM'],
-  money: ['VAULT', 'MONEY', 'STOCK', 'PRICE', 'BONUS', 'FUNDS', 'BANKS', 'ASSET', 'TRADE', 'COINS'],
-  hacking: ['PHISH', 'PATCH', 'VIRUS', 'PROXY', 'SHELL', 'SHARK', 'STEAL', 'FLINT', 'BREAK', 'ENTER'],
-  luxury: ['ELITE', 'PRIME', 'GRAND', 'SHINY', 'PEARL', 'CROWN', 'ROYAL', 'JEWEL', 'METAL', 'EXTRA'],
-};
+import { Difficulty, DifficultyConfig } from './types';
 
-// Ensure all are exactly 5 letters and uppercase
-Object.keys(WORD_LISTS).forEach(cat => {
-  (WORD_LISTS as any)[cat] = (WORD_LISTS as any)[cat].map((w: string) => {
-    const clean = w.toUpperCase().replace(/[^A-Z]/g, '');
-    if (clean.length > 5) return clean.slice(0, 5);
-    if (clean.length < 5) return clean.padEnd(5, 'S'); // Fallback padding
-    return clean;
-  });
-});
+export const DIFFICULTY_CONFIGS: Record<Difficulty, DifficultyConfig> = {
+  [Difficulty.TUTORIAL]: {
+    name: "TUTORIAL",
+    maxAttempts: 6,
+    alarmIncrement: 0,
+    basePayout: 1000,
+    baseXp: 500,
+    wordLengths: [4],
+    scanCost: 0,
+    removeCost: 0,
+  },
+  [Difficulty.EASY]: {
+    name: "EASY",
+    maxAttempts: 6,
+    alarmIncrement: 8,
+    basePayout: 5000,
+    baseXp: 1000,
+    wordLengths: [5],
+    scanCost: 500,
+    removeCost: 300,
+  },
+  [Difficulty.MEDIUM]: {
+    name: "MEDIUM",
+    maxAttempts: 6,
+    alarmIncrement: 15,
+    basePayout: 12000,
+    baseXp: 2500,
+    wordLengths: [5],
+    scanCost: 1200,
+    removeCost: 750,
+  },
+  [Difficulty.HARD]: {
+    name: "HARD",
+    maxAttempts: 6,
+    alarmIncrement: 25,
+    basePayout: 30000,
+    baseXp: 6000,
+    wordLengths: [5],
+    scanCost: 3000,
+    removeCost: 1800,
+  }
+};
 
 export const INITIAL_STATE = {
   maxAttempts: 6,

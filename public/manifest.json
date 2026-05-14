@@ -1,0 +1,10 @@
+{
+  "name": "Spell Heist",
+  "short_name": "Spell Heist",
+  "description": "Crack the vault before the alarm goes off. A high-stakes word puzzle game.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait"
+}

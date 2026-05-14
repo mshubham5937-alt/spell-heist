@@ -7,9 +7,24 @@ export enum GameScreen {
   SPLASH = 'SPLASH',
   MENU = 'MENU',
   BREACH = 'BREACH',
-  LOOT = 'LOOT',
-  STASH = 'STASH',
-  INTEL = 'INTEL',
+}
+
+export enum Difficulty {
+  TUTORIAL = 'TUTORIAL',
+  EASY = 'EASY',
+  MEDIUM = 'MEDIUM',
+  HARD = 'HARD',
+}
+
+export interface DifficultyConfig {
+  name: string;
+  maxAttempts: number;
+  alarmIncrement: number;
+  basePayout: number;
+  baseXp: number;
+  wordLengths: number[];
+  scanCost: number;
+  removeCost: number;
 }
 
 export enum LetterState {

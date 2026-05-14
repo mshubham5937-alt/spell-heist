@@ -4,18 +4,15 @@
  */
 
 import { motion } from 'motion/react';
-import { GameScreen } from '../types';
+import { Difficulty, GameScreen } from '../types';
 import { 
   User, 
   Coins, 
-  Award, 
-  Timer, 
-  Infinity as InfinityIcon, 
-  Map as MapIcon,
-  Lock,
-  ShoppingCart,
-  BarChart3,
-  Terminal
+  Award,
+  Terminal,
+  ShieldAlert,
+  ShieldCheck,
+  ShieldHalf
 } from 'lucide-react';
 
 interface MenuProps {
@@ -23,14 +20,20 @@ interface MenuProps {
     xp: number;
     credits: number;
     diamonds: number;
+    streak: number;
+    hasCompletedTutorial: boolean;
+    wins?: Record<Difficulty, number>;
   };
-  onSelectHeist: () => void;
-  onNavigate: (screen: GameScreen) => void;
+  onSelectHeist: (diff: Difficulty) => void;
 }
 
-export default function Menu({ stats, onSelectHeist, onNavigate }: MenuProps) {
+export default function Menu({ stats, onSelectHeist }: MenuProps) {
+  const getWins = (diff: Difficulty) => {
+    return stats.wins?.[diff] || 0;
+  };
+
   return (
-    <div className="min-h-screen flex flex-col relative pb-32">
+    <div className="min-h-screen flex flex-col relative pb-10">
       {/* Top Bar */}
       <header className="fixed top-0 left-0 w-full h-16 flex items-center justify-between px-margin-mobile bg-surface/40 backdrop-blur-xl border-b border-white/10 z-50">
         <div className="flex items-center gap-2">
@@ -52,100 +55,91 @@ export default function Menu({ stats, onSelectHeist, onNavigate }: MenuProps) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 pt-24 px-margin-mobile max-w-5xl mx-auto w-full flex flex-col items-center">
-        <div className="w-full flex flex-col items-center text-center mt-8 mb-12">
-          <div className="font-mono text-[10px] text-on-surface-variant tracking-widest border border-white/10 px-4 py-1 rounded bg-surface/50 backdrop-blur-md mb-8">
-            [ SYSTEM STATUS: READY ]
-          </div>
-          
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onSelectHeist}
-            className="group relative"
+      <main className="flex-1 pt-24 pb-8 px-margin-mobile max-w-5xl mx-auto w-full flex flex-col items-center">
+        {!stats.hasCompletedTutorial && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full max-w-2xl bg-primary/10 border border-primary/30 rounded-xl p-8 mb-12 text-center"
           >
-            <div className="absolute inset-0 bg-primary-container rounded-lg opacity-40 blur-xl group-hover:opacity-60 transition-opacity"></div>
-            <div className="relative bg-primary-container text-on-primary-container px-12 py-6 rounded-lg font-display text-2xl font-bold tracking-tight border border-primary/50 shadow-[0_0_20px_rgba(255,82,92,0.5)] overflow-hidden">
-              SELECT HEIST
-              <div className="absolute top-0 left-0 w-full h-[1px] bg-white/50 opacity-0 group-hover:opacity-100 group-hover:translate-y-[60px] transition-all duration-1000 ease-linear" />
-            </div>
-          </motion.button>
+            <ShieldAlert size={48} className="text-primary mx-auto mb-4" />
+            <h2 className="text-2xl font-display font-bold text-primary mb-2">NEW OPERATIVE DETECTED</h2>
+            <p className="text-on-surface-variant mb-6">You must complete the training simulation to learn how to bypass vault security and use your tools.</p>
+            <button
+              onClick={() => onSelectHeist(Difficulty.TUTORIAL)}
+              className="bg-primary text-on-primary font-bold px-8 py-3 rounded-lg shadow-[0_0_20px_rgba(255,82,92,0.3)] hover:scale-105 active:scale-95 transition-all w-full md:w-auto font-display tracking-wider"
+            >
+              START TRAINING HEIST
+            </button>
+          </motion.div>
+        )}
+
+        <div className="w-full flex flex-col items-center text-center mt-4 mb-4">
+          <div className="font-mono text-[10px] text-on-surface-variant tracking-widest border border-white/10 px-4 py-1 rounded bg-surface/50 backdrop-blur-md mb-8">
+            [ SELECT THREAT LEVEL ]
+          </div>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mt-8">
-          <HeistCard 
-            title="Daily Challenge" 
-            desc="Infiltrate the automated vault. Limited attempts remaining."
-            reward="REWARD: HIGH"
-            icon={<Timer size={24} className="text-secondary" />}
-            accent="primary"
-            onClick={onSelectHeist}
+        {/* Difficulty Selection Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mt-4">
+          <DifficultyCard 
+            title="EASY" 
+            desc="Common words, beginner friendly. Generous attempts and relaxed security."
+            reward="LOW PAYOUT"
+            wins={getWins(Difficulty.EASY)}
+            icon={<ShieldCheck size={32} className="text-[#39FF14]" />} // Neon Green
+            colorClass="border-[#39FF14]/50 shadow-[0_0_15px_rgba(57,255,20,0.2)] hover:shadow-[0_0_25px_rgba(57,255,20,0.4)]"
+            titleColor="text-[#39FF14]"
+            onClick={() => onSelectHeist(Difficulty.EASY)}
           />
-          <HeistCard 
-            title="Endless Mode" 
-            desc="Descend through infinite security layers. How deep can you go?"
-            reward="CURRENT TIER: 12"
-            icon={<InfinityIcon size={24} className="text-tertiary" />}
-            accent="tertiary"
-            onClick={onSelectHeist}
+          <DifficultyCard 
+            title="MEDIUM" 
+            desc="Uncommon words, balanced challenge. Moderate security alarm."
+            reward="STANDARD PAYOUT"
+            wins={getWins(Difficulty.MEDIUM)}
+            icon={<ShieldHalf size={32} className="text-[#FF8C00]" />} // Neon Orange
+            colorClass="border-[#FF8C00]/50 shadow-[0_0_15px_rgba(255,140,0,0.2)] hover:shadow-[0_0_25px_rgba(255,140,0,0.4)]"
+            titleColor="text-[#FF8C00]"
+            onClick={() => onSelectHeist(Difficulty.MEDIUM)}
           />
-          <HeistCard 
-            title="Campaign" 
-            desc="Follow the primary intel trail. Uncover the syndicate's secrets."
-            reward="PROGRESS: 34%"
-            icon={<MapIcon size={24} className="text-on-surface" />}
-            accent="neutral"
-            onClick={onSelectHeist}
+          <DifficultyCard 
+            title="HARD" 
+            desc="Advanced vocabulary, high pressure. Aggressive security response."
+            reward="MAXIMUM PAYOUT"
+            wins={getWins(Difficulty.HARD)}
+            icon={<ShieldAlert size={32} className="text-[#FF003F]" />} // Neon Crimson
+            colorClass="border-[#FF003F]/50 shadow-[0_0_15px_rgba(255,0,63,0.2)] hover:shadow-[0_0_25px_rgba(255,0,63,0.4)]"
+            titleColor="text-[#FF003F]"
+            onClick={() => onSelectHeist(Difficulty.HARD)}
           />
         </div>
       </main>
-
-      {/* Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 w-full h-20 bg-surface-container-lowest/60 backdrop-blur-2xl border-t border-white/10 flex justify-around items-center px-4 pb-safe z-50 md:hidden">
-        <NavItem active icon={<Terminal size={20} />} label="BREACH" />
-        <NavItem icon={<Lock size={20} />} label="VAULT" />
-        <NavItem icon={<ShoppingCart size={20} />} label="STASH" onClick={() => onNavigate(GameScreen.STASH)} />
-        <NavItem icon={<BarChart3 size={20} />} label="INTEL" onClick={() => onNavigate(GameScreen.INTEL)} />
-      </nav>
     </div>
   );
 }
 
-function HeistCard({ title, desc, reward, icon, accent, onClick }: any) {
-  const accentColor = accent === 'primary' ? 'group-hover:border-primary/50' : accent === 'tertiary' ? 'group-hover:border-tertiary/50' : 'group-hover:border-white/30';
-  
+function DifficultyCard({ title, desc, reward, wins, icon, colorClass, titleColor, onClick }: any) {
   return (
     <motion.button
-      whileHover={{ y: -5 }}
+      whileHover={{ y: -8, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`group relative flex flex-col items-start p-6 rounded-xl glass-panel text-left overflow-hidden transition-all ${accentColor}`}
+      className={`group relative flex flex-col items-center text-center p-8 rounded-xl bg-surface-container border transition-all ${colorClass} overflow-hidden`}
     >
-      <div className="w-12 h-12 rounded-lg bg-surface flex items-center justify-center border border-white/5 mb-4 group-hover:bg-surface-container transition-colors">
+      <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent" />
+      
+      <div className="mb-6 relative">
+        <div className="absolute inset-0 blur-xl opacity-50 transition-opacity group-hover:opacity-100" />
         {icon}
       </div>
-      <h3 className="font-display text-xl text-on-surface mb-2">{title}</h3>
-      <p className="font-sans text-sm text-on-surface-variant mb-6 opacity-80">{desc}</p>
-      <div className="w-full flex justify-between items-center border-t border-white/5 pt-4 mt-auto">
-        <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest">{reward}</span>
-        <div className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center group-hover:border-on-surface transition-colors">
-          <Terminal size={12} className="opacity-40 group-hover:opacity-100" />
-        </div>
+      
+      <h3 className={`font-display text-4xl tracking-tight mb-4 ${titleColor}`}>{title}</h3>
+      <p className="font-sans text-sm text-on-surface-variant mb-8 opacity-90 leading-relaxed max-w-[200px]">{desc}</p>
+      
+      <div className="w-full flex justify-between items-center border-t border-white/5 pt-6 mt-auto">
+        <span className={`font-mono text-[10px] uppercase tracking-widest ${titleColor} opacity-80`}>{reward}</span>
+        <span className={`font-mono text-[10px] uppercase tracking-widest text-on-surface-variant`}>{wins} WINS</span>
       </div>
     </motion.button>
-  );
-}
-
-function NavItem({ icon, label, active, onClick }: any) {
-  return (
-    <button 
-      onClick={onClick}
-      className={`flex flex-col items-center justify-center w-16 gap-1 transition-all ${
-        active ? 'text-primary drop-shadow-[0_0_10px_rgba(255,179,178,0.6)]' : 'text-on-surface-variant opacity-50'
-      }`}
-    >
-      <div className={`p-1 ${active ? 'bg-primary/10 rounded-md' : ''}`}>{icon}</div>
-      <span className="font-mono text-[8px] font-bold tracking-widest">{label}</span>
-    </button>
   );
 }
